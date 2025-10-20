@@ -70,6 +70,7 @@ All services are containerized using **Docker** for consistent deployment.
 ```bash
 git clone https://github.com/manlikesteve/MediGuard.git
 cd MediGuard/backend
+```
 
 ### 2️⃣ Install PHP & Laravel dependencies
 
@@ -77,6 +78,7 @@ cd MediGuard/backend
 composer install
 cp .env.example.env
 php artisan key:generate
+```
 
 ### 3️⃣ Configure the database in .env
 
@@ -87,18 +89,21 @@ DB_PORT=3306
 DB_DATABASE=mediguard_db
 DB_USERNAME=root
 DB_PASSWORD=
+```
 
 ### Run migrations and seed default users:
 
 ```bash
 php artisan migrate
 php artisan db:seed
+```
 
 ### 4️⃣ Install Node.js dependencies
 
 ```bash
 npm install
 npm run dev
+```
 
 ### 🐍 Python Environment Setup
 
@@ -106,11 +111,13 @@ npm run dev
 
 ```bash
 cd backend/public/python
+```
 
 ### Create a virtual environment:
 
 ```bash
 python -m venv .venv
+```
 
 ### Activate the environment:
 
@@ -118,23 +125,27 @@ python -m venv .venv
 
 ```bash
 .venv\Scripts\activate
+```
 
 
 ### On Mac/Linux
 
 ```bash
 source .venv/bin/activate
+```
 
 
 ### Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
 
 ### Preprocess datasets:
 
 ```bash
 python preprocessing/preprocess.py
+```
 
 ### 🚀 Running the Application
 
@@ -142,18 +153,19 @@ python preprocessing/preprocess.py
 
 ```bash
 php artisan serve
-
+```
 
 ### The app will be available at:
 
 ```bash
 http://127.0.0.1:8000
-
+```
 
 ### Start the model server (if using FastAPI):
 
 ```bash
 uvicorn model_server:app --reload --port 8001
+```
 
 ### Developer: Njino Stephen Mwaura
 ### Supervisor: Tiberius Tabulu
