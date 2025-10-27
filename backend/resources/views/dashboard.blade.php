@@ -10,7 +10,6 @@
 
             <!-- Overview Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                
                 <!-- Active Threats -->
                 <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-indigo-100">
                     <div class="flex items-center space-x-4">
@@ -61,56 +60,45 @@
                     <span class="text-sm text-gray-500">Last updated: {{ now()->format('H:i A') }}</span>
                 </div>
 
-                <!-- Placeholder for real-time chart -->
                 <div class="h-64 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 rounded-xl flex items-center justify-center text-gray-500 border border-indigo-50">
                     <p>📊 Real-time traffic analysis chart coming soon...</p>
                 </div>
             </div>
 
-            <!-- Recent Alerts -->
+            <!-- Real-time Prediction Test -->
             <div class="bg-white p-8 rounded-2xl shadow-md border border-indigo-100">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-indigo-700">Recent Security Alerts</h3>
-                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition text-sm">
-                        View All
-                    </button>
-                </div>
+                <h3 class="text-lg font-semibold text-indigo-700 mb-4">🧠 Real-Time Anomaly Detection</h3>
+                <p class="text-gray-600 mb-4">Enter a feature vector below to test the Isolation Forest model and detect potential threats.</p>
 
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-indigo-50 text-indigo-700 text-sm uppercase tracking-wider">
-                            <tr>
-                                <th class="px-4 py-3 text-left">Timestamp</th>
-                                <th class="px-4 py-3 text-left">Alert Type</th>
-                                <th class="px-4 py-3 text-left">Severity</th>
-                                <th class="px-4 py-3 text-left">Source IP</th>
-                                <th class="px-4 py-3 text-left">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-100 text-gray-700">
-                            <tr>
-                                <td class="px-4 py-3">2025-10-20 11:32:45</td>
-                                <td class="px-4 py-3">DoS Attempt</td>
-                                <td class="px-4 py-3 text-red-600 font-semibold">High</td>
-                                <td class="px-4 py-3">192.168.0.24</td>
-                                <td class="px-4 py-3"><span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Pending Review</span></td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3">2025-10-20 10:55:10</td>
-                                <td class="px-4 py-3">Port Scan</td>
-                                <td class="px-4 py-3 text-yellow-600 font-semibold">Medium</td>
-                                <td class="px-4 py-3">10.0.0.7</td>
-                                <td class="px-4 py-3"><span class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">Resolved</span></td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3">2025-10-20 09:47:22</td>
-                                <td class="px-4 py-3">Abnormal Traffic Spike</td>
-                                <td class="px-4 py-3 text-orange-600 font-semibold">Low</td>
-                                <td class="px-4 py-3">172.16.5.33</td>
-                                <td class="px-4 py-3"><span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Under Observation</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <form id="predictForm">
+                    <input type="text" id="featuresInput" 
+                        class="w-full border border-indigo-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none" 
+                        placeholder="e.g. 0.1,0.3,0.5,0.2,0.4,0.7,0.1,0.9,0.3,0.5">
+
+                    <button type="submit" 
+                        class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        Predict
+                    </button>
+                </form>
+
+                <div id="predictionResult" class="mt-6 text-lg font-semibold text-gray-800"></div>
+
+                <!-- Recent Predictions -->
+                <div id="recentPredictions" class="mt-8">
+                    <h4 class="text-md font-semibold text-indigo-700 mb-3">Recent Predictions</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-indigo-50 text-indigo-700 text-sm uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-4 py-2 text-left">Timestamp</th>
+                                    <th class="px-4 py-2 text-left">Prediction</th>
+                                </tr>
+                            </thead>
+                            <tbody id="predictionTableBody" class="bg-white divide-y divide-gray-100 text-gray-700">
+                                <tr><td colspan="2" class="px-4 py-3 text-center text-gray-400">No predictions yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -137,4 +125,52 @@
             </div>
         </div>
     </div>
+
+    <script>
+    const recentPredictions = [];
+
+    document.getElementById('predictForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = document.getElementById('featuresInput').value.split(',').map(Number);
+        const resultDiv = document.getElementById('predictionResult');
+        const tableBody = document.getElementById('predictionTableBody');
+        
+        resultDiv.innerText = "🔍 Running prediction...";
+
+        try {
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ features: input })
+            });
+
+            const data = await response.json();
+            const timestamp = new Date().toLocaleTimeString();
+            const prediction = data.prediction || "Error";
+
+            resultDiv.innerText = `🧩 Prediction Result: ${prediction}`;
+            
+            // Add to recent predictions
+            recentPredictions.unshift({ time: timestamp, result: prediction });
+            if (recentPredictions.length > 5) recentPredictions.pop();
+
+            // Update the table dynamically
+            tableBody.innerHTML = recentPredictions.map(p => `
+                <tr>
+                    <td class="px-4 py-2">${p.time}</td>
+                    <td class="px-4 py-2 font-semibold ${p.result.includes('Anomaly') ? 'text-red-600' : 'text-green-600'}">
+                        ${p.result}
+                    </td>
+                </tr>
+            `).join('');
+
+        } catch (err) {
+            console.error(err);
+            resultDiv.innerText = "⚠️ Error connecting to prediction service.";
+        }
+    });
+    </script>
 </x-app-layout>
