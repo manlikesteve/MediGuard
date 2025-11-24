@@ -7,160 +7,145 @@
 
     <div class="py-10 bg-gradient-to-br from-blue-50 via-white to-indigo-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
-            
-            <!-- Overview Metrics -->
+
+            <!-- 📊 Stats Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-                <!-- DoS Alerts Detected -->
                 <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-indigo-100">
-                    <div class="flex items-center space-x-4">
-                        <div class="p-3 rounded-full bg-red-100 text-red-600">
-                            <i class="fas fa-bolt text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-gray-700 font-semibold">DoS Alerts</h3>
-                            <p class="text-3xl font-bold text-gray-900 mt-1">12</p>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-2">Detected over the last 24 hours.</p>
+                    <div class="text-lg font-semibold text-gray-700">DoS Alerts</div>
+                    <div class="text-3xl font-bold text-gray-900 mt-1">12</div>
+                    <div class="text-xs text-gray-500 mt-2">Detected in last 24 hours</div>
                 </div>
-
-                <!-- Packets Analyzed -->
                 <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-indigo-100">
-                    <div class="flex items-center space-x-4">
-                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
-                            <i class="fas fa-network-wired text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-gray-700 font-semibold">Packets Analyzed</h3>
-                            <p class="text-3xl font-bold text-gray-900 mt-1">48,392</p>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-2">Through the MediGuard IDS engine.</p>
+                    <div class="text-lg font-semibold text-gray-700">Packets Analyzed</div>
+                    <div class="text-3xl font-bold text-gray-900 mt-1">48,392</div>
                 </div>
-
-                <!-- False Positives -->
                 <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-indigo-100">
-                    <div class="flex items-center space-x-4">
-                        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                            <i class="fas fa-exclamation-circle text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-gray-700 font-semibold">False Positives</h3>
-                            <p class="text-3xl font-bold text-gray-900 mt-1">2</p>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-2">Pending analyst confirmation.</p>
+                    <div class="text-lg font-semibold text-gray-700">False Positives</div>
+                    <div class="text-3xl font-bold text-gray-900 mt-1">2</div>
                 </div>
-
-                <!-- System Health -->
                 <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-indigo-100">
-                    <div class="flex items-center space-x-4">
-                        <div class="p-3 rounded-full bg-green-100 text-green-600">
-                            <i class="fas fa-heartbeat text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-gray-700 font-semibold">System Health</h3>
-                            <p class="text-3xl font-bold text-gray-900 mt-1">98%</p>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-2">Detection system uptime.</p>
-                </div>
-
-            </div>
-
-            <!-- Real-Time Traffic Analytics -->
-            <div class="bg-white p-8 rounded-2xl shadow-md border border-indigo-100">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-indigo-700">Real-Time Traffic Monitoring</h3>
-                    <button class="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
-                        Refresh
-                    </button>
-                </div>
-                <div class="h-72 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 rounded-xl flex items-center justify-center text-gray-500 border border-indigo-50">
-                    <p>📊 Live packet flow visualization coming soon...</p>
+                    <div class="text-lg font-semibold text-gray-700">System Health</div>
+                    <div class="text-3xl font-bold text-gray-900 mt-1">98%</div>
                 </div>
             </div>
 
-            <!-- Alerts Queue -->
+            <!-- 🧪 Model Testing Section -->
             <div class="bg-white p-8 rounded-2xl shadow-md border border-indigo-100">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-indigo-700">Active Alert Queue</h3>
-                    <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm">
-                        Resolve Selected
+                <h3 class="text-lg font-semibold text-indigo-700 mb-4">Real-Time Detection</h3>
+
+                <!-- 🔹 Tabs -->
+                <div class="border-b mb-4">
+                    <nav class="flex space-x-4">
+                        <button onclick="switchTab('iso', event)"
+                            class="tab-btn active font-bold text-indigo-600">Isolation Forest</button>
+                        <button onclick="switchTab('rf', event)"
+                            class="tab-btn font-bold text-gray-500 hover:text-indigo-600">Random Forest</button>
+                    </nav>
+                </div>
+
+                <!-- 🧬 Input for features -->
+                <textarea id="featuresInput" rows="3" class="w-full border border-indigo-200 rounded-lg px-4 py-2"
+                    placeholder="Enter 42 comma-separated values"></textarea>
+
+                <!-- 🔘 Buttons per tab -->
+                <div id="tab-iso" style="display:block;">
+                    <button onclick="predict('/predict')" 
+                        class="w-full bg-indigo-600 text-white px-5 py-2 rounded-lg mt-3 hover:bg-indigo-700 transition">
+                        Predict Using Isolation Forest
                     </button>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-indigo-50 text-indigo-700 text-sm uppercase tracking-wider">
-                            <tr>
-                                <th class="px-4 py-3 text-left">#</th>
-                                <th class="px-4 py-3 text-left">Timestamp</th>
-                                <th class="px-4 py-3 text-left">Alert Type</th>
-                                <th class="px-4 py-3 text-left">Source IP</th>
-                                <th class="px-4 py-3 text-left">Severity</th>
-                                <th class="px-4 py-3 text-left">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-100 text-gray-700">
-                            <tr>
-                                <td class="px-4 py-3">1</td>
-                                <td class="px-4 py-3">2025-10-20 14:05:13</td>
-                                <td class="px-4 py-3">DoS Attempt</td>
-                                <td class="px-4 py-3">192.168.1.5</td>
-                                <td class="px-4 py-3 text-red-600 font-semibold">High</td>
-                                <td class="px-4 py-3">
-                                    <button class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg text-xs hover:bg-yellow-200">
-                                        Review
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3">2</td>
-                                <td class="px-4 py-3">2025-10-20 13:49:37</td>
-                                <td class="px-4 py-3">Unusual Traffic Spike</td>
-                                <td class="px-4 py-3">10.0.0.45</td>
-                                <td class="px-4 py-3 text-yellow-600 font-semibold">Medium</td>
-                                <td class="px-4 py-3">
-                                    <button class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg text-xs hover:bg-yellow-200">
-                                        Review
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3">3</td>
-                                <td class="px-4 py-3">2025-10-20 13:20:05</td>
-                                <td class="px-4 py-3">New Device Connection</td>
-                                <td class="px-4 py-3">172.16.5.17</td>
-                                <td class="px-4 py-3 text-green-600 font-semibold">Low</td>
-                                <td class="px-4 py-3">
-                                    <button class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg text-xs hover:bg-yellow-200">
-                                        Review
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div id="tab-rf" class="hidden">
+                    <button onclick="predict('/predict-rf')"
+                        style="background-color:#16a34a !important; color:white !important;"
+                        class="w-full bg-green-600 !important text-white px-5 py-2 rounded-lg mt-3 hover:bg-green-700 transition relative z-50">
+                        Predict Using Random Forest
+                    </button>
                 </div>
+
+                <div id="predictionResult" class="mt-6 text-lg font-semibold"></div>
+
+                <!-- 📄 Recent Predictions Table -->
+                <h4 class="mt-8 font-semibold text-indigo-700">Recent Predictions</h4>
+                <table class="min-w-full divide-y divide-gray-200 mt-3">
+                    <thead class="bg-indigo-50 text-indigo-700 text-sm uppercase tracking-wider">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Time</th>
+                            <th class="px-4 py-2 text-left">Model</th>
+                            <th class="px-4 py-2 text-left">Prediction</th>
+                            <th class="px-4 py-2 text-left">Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="predictionTableBody" class="bg-white divide-y divide-gray-100 text-gray-700">
+                        <tr><td colspan="4" class="px-4 py-3 text-center text-gray-400">No predictions yet.</td></tr>
+                    </tbody>
+                </table>
             </div>
 
-            <!-- Export Reports -->
-            <div class="bg-white p-8 rounded-2xl shadow-md border border-indigo-100">
-                <h3 class="text-lg font-semibold mb-4 text-indigo-700">Generate and Export Reports</h3>
-                <p class="text-gray-700 leading-relaxed">
-                    As an analyst, you can generate detailed logs and summaries of detected anomalies, export them as CSV or PDF,
-                    and share them with administrators for further review.
-                </p>
-                <div class="mt-6">
-                    <a href="#" class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition">
-                        Export CSV
-                    </a>
-                    <a href="#" class="ml-3 bg-gray-100 text-gray-700 px-5 py-2 rounded-lg hover:bg-gray-200 transition">
-                        Export PDF
-                    </a>
-                </div>
+            <!-- 📝 Analyst Notes -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border border-indigo-100">
+                <h3 class="text-lg font-semibold mb-4 text-indigo-700">Analyst Notes</h3>
+                <textarea rows="4" class="w-full border border-indigo-200 rounded-lg px-4 py-2"
+                    placeholder="Write your notes..."></textarea>
             </div>
+
         </div>
     </div>
+
+    <!-- 🔧 JavaScript Logic -->
+    <script>
+        let recentPredictions = [];
+
+        function switchTab(tab, event) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-indigo-600', 'font-bold', 'border-indigo-600', 'border-b-2');
+                btn.classList.add('text-gray-500');
+            });
+            event.target.classList.add('active', 'text-indigo-600', 'font-bold', 'border-indigo-600', 'border-b-2');
+            event.target.classList.remove('text-gray-500');
+
+            document.getElementById('tab-iso').style.display = tab === 'iso' ? 'block' : 'none';
+            document.getElementById('tab-rf').style.display = tab === 'rf' ? 'block' : 'none';
+        }
+
+        async function predict(endpoint) {
+            const input = document.getElementById('featuresInput').value.split(',').map(Number);
+            const resultDiv = document.getElementById('predictionResult');
+            const tableBody = document.getElementById('predictionTableBody');
+
+            if (input.length !== 42) {
+                return resultDiv.innerHTML = "⚠️ Please enter exactly 42 comma-separated values.";
+            }
+
+            resultDiv.innerHTML = "⏳ Running prediction...";
+
+            try {
+                const response = await fetch('http://127.0.0.1:8005' + endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ features: input })
+                });
+
+                const data = await response.json();
+                const time = new Date().toLocaleTimeString();
+                
+                resultDiv.innerHTML = `🧠 <b>${data.model}</b> → ${data.prediction}<br>📝 ${data.comment}`;
+
+                recentPredictions.unshift({ time, model: data.model, result: data.prediction, comment: data.comment });
+                if (recentPredictions.length > 5) recentPredictions.pop();
+
+                tableBody.innerHTML = recentPredictions.map(p => `
+                    <tr>
+                        <td class="px-4 py-2">${p.time}</td>
+                        <td class="px-4 py-2">${p.model}</td>
+                        <td class="px-4 py-2 font-semibold ${p.result.includes('Anomaly') || p.result.includes('Detected') ? 'text-red-600' : 'text-green-600'}">${p.result}</td>
+                        <td class="px-4 py-2">${p.comment}</td>
+                    </tr>`).join('');
+
+            } catch (error) {
+                resultDiv.innerHTML = "❌ Error communicating with model API.";
+                console.error(error);
+            }
+        }
+    </script>
 </x-app-layout>
