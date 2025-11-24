@@ -1,11 +1,11 @@
-# 🛡️ MediGuard – AI-Powered Cyber Threat Detection System for Digital Health Infrastructure
+# MediGuard – AI-Powered Cyber Threat Detection System for Digital Health Infrastructure
 
 MediGuard is an AI-based cyber threat detection system designed to protect hospital networks from Denial-of-Service (DoS) and other network-level attacks.  
 It combines **Laravel** for the backend, **Vue.js** for the frontend, and a **Python-based Isolation Forest model** for anomaly detection and live network analysis.
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 - [Project Overview](#project-overview)
 - [System Architecture](#system-architecture)
 - [Features](#features)
@@ -18,19 +18,25 @@ It combines **Laravel** for the backend, **Vue.js** for the frontend, and a **Py
 
 ---
 
-## 🧠 Project Overview
+## Project Overview
 
 Healthcare institutions rely on digital systems for patient records, diagnostics, and hospital resource management. However, these systems are increasingly targeted by **Denial-of-Service (DoS)** attacks that can cripple operations and put patient safety at risk.
 
 **MediGuard** addresses this problem by offering:
-- Real-time anomaly detection using the **Isolation Forest** algorithm.  
-- An interactive **admin and analyst dashboard** for monitoring threats.  
+- Real-time anomaly detection using the **Isolation Forest** algorithm and Random Forest for good measure. 
+- An interactive **analyst dashboard** for monitoring threats.  
 - Integration with simulated DoS attacks for model evaluation.  
 - Lightweight architecture optimized for resource-constrained hospital networks.
+The system targets Denial of Service (DoS) cyber threats using:
+
+| Detection Algorithm | Purpose |
+|-------|--------------------|
+| **Isolation Forest** | Detect unknown/new attack patterns (main system) |
+| **Random Forest (optional addon)** | Detect known traffic behavior |
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 Frontend (Vue.js) → Backend API (Laravel) → Model Server (FastAPI, Python) → MySQL Database
 
@@ -62,7 +68,28 @@ All services are containerized using **Docker** for consistent deployment.
 | **IDE** | Visual Studio Code |
 
 ---
+## Models
 
+Isolation Forest: ~200 estimators
+Random Forest: ~100 trees
+
+---
+
+## Performance
+
+Isolation Forest: ROC-AUC - ~0.54, F1-Score - Learns anomalous structure
+Random Forest: ROC-AUC - ~0.82, F1-Score - ~0.69
+
+---
+## Requirements
+
+Python 3.11+
+FastAPI 0.109+
+Joblib, NumPy, Scikit-Learn
+Uvicorn
+8GB+ RAM recommended
+
+---
 ## 🛠️ Setup Instructions
 
 ### 1️⃣ Clone the repository

@@ -9,14 +9,13 @@ use App\Models\Threat;
 class DashboardController extends Controller
 {
     /**
-     * Display the analyst dashboard with live metrics.
+     * Display dashboard metrics.
      */
     public function index()
     {
         $activeThreats = Threat::where('status', 'active')->count();
         $reviewedAlerts = Threat::where('status', 'reviewed')->count();
 
-        // Determine system status
         $recentDoS = Threat::where('type', 'DoS')
             ->where('detected_at', '>=', now()->subMinutes(30))
             ->where('status', 'active')
@@ -24,35 +23,54 @@ class DashboardController extends Controller
 
         $systemStatus = $recentDoS > 0 ? 'Under Attack' : 'Secure';
 
-        // Render dashboard with statistics
-        return view('dashboard', compact('activeThreats', 'reviewedAlerts', 'systemStatus'));
+        return view('analyst.dashboard', compact(
+            'activeThreats',
+            'reviewedAlerts',
+            'systemStatus'
+        ));
     }
 
     /**
-     * Handle prediction request from dashboard form.
+     * Handle prediction requests from dashboard (AJAX).
      */
     public function predict(Request $request)
     {
-        $featuresInput = $request->input('features');
-
-        // Convert the comma-separated string to a numeric array
-        $features = array_map('floatval', explode(',', $featuresInput));
-
         try {
-            $response = Http::timeout(10)->post(config('services.ml_api.url'), [
+            // Parse features input (array of floats)
+            $features = $request->input('features');
+            if (!is_array($features)) {
+                $features = array_map('floatval', explode(',', $features));
+            }
+
+            // URL of the FastAPI model server
+            $modelServerUrl = config('services.ml_api.url', 'http://127.0.0.1:8005/predict');
+
+            // Make HTTP POST request to FastAPI model
+            $response = Http::timeout(10)->post($modelServerUrl, [
                 'features' => $features
             ]);
 
-            if ($response->successful()) {
-                $result = $response->json();
-                return back()->with('prediction', $result['prediction'] ?? 'No prediction');
-            } else {
-                return back()->with('error', 'Model API error: ' . $response->body());
+            if ($response->failed()) {
+                return response()->json([
+                    'error' => 'Prediction service returned an error.',
+                    'details' => $response->body(),
+                ], 500);
             }
 
+            $result = $response->json();
+
+            // Return JSON for JS to display in dashboard
+            return response()->json([
+                'status' => 'success',
+                'prediction' => $result['prediction'] ?? 'Unknown',
+                'input_feature_count' => $result['input_feature_count'] ?? count($features),
+            ]);
+
         } catch (\Exception $e) {
-            \Log::error('Prediction API connection error: ' . $e->getMessage());
-            return back()->with('error', '⚠️ Error connecting to prediction service. Please check if the model server is running.');
+            return response()->json([
+                'error' => '⚠️ Error connecting to prediction service',
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 }
